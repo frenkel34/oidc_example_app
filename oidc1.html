@@ -10,8 +10,8 @@
 	var menu_name_1			= 'app #1';															// Name of menu item
 	var menu_page_2			= 'https://wk.okta.solutions/oidc2.html'; 							// Leave empty if n/a
 	var menu_name_2			= 'app #2';															// Name of menu item
-	var menu_page_3			= ''; 										// Leave empty if n/a
-	var menu_name_3			= '';															// Name of menu item
+	var menu_page_3			= ''; 																// Leave empty if n/a
+	var menu_name_3			= '';																// Name of menu item
 </script>
 <html>
 	<head>
@@ -113,7 +113,7 @@
 			<div class="menu">
 				<a id="getToken" href="">get token</a> | 
 			</div>
-			<p>This a demo app to show Okta's capabilities around OAuth and OIDC.</p>
+			<p>This a demo app to show Okta's capabilities around OAuth and OIDC. As Okta returns a thin id_token by default, click <a href="" id="lnk_fat_id">here</a> to see the fat id_token.</p>
 			<h2 id="lbl_h2_raw_id">The raw id_token is: </h2>
 			<p><pre id="lbl_token_raw_id"></pre></p>
 			<h2 id="lbl_h2_pretty_id">The pretty id_token is: </h2>
@@ -132,38 +132,44 @@
 	var token_raw_id = getParameterByName('id_token');
 	var error = getParameterByName('error_description');
 	console.log(token_raw);
-	if (token_raw == '') {
+	if (token_raw == '' && token_raw_id == '') {
 		if (error != '') {
 			alert(error);
 		} else {
 			window.location = oktaOrg + '/oauth2/v1/authorize?client_id='+ client_id+'&response_type=token id_token&scope='+ scopes +'&redirect_uri='+ appUrl +'&state=x&nonce=y'
 		}
 	} else {
-		var token_pretty = token_raw
-		token_pretty = parseJwt(token_pretty);
-		console.log('access_token')
-		console.log(token_pretty);
-		token_pretty = JSON.stringify(token_pretty, undefined, 2);
-		$("#lbl_token_pretty").text(token_pretty);	
-		$("#lbl_h2_pretty").show();
+		if (token_raw != '') {
+			var token_pretty = token_raw
+			token_pretty = parseJwt(token_pretty);
+			console.log('access_token')
+			console.log(token_pretty);
+			token_pretty = JSON.stringify(token_pretty, undefined, 2);
+			$("#lbl_token_pretty").text(token_pretty);	
+			$("#lbl_h2_pretty").show();
+			$("#lbl_token_raw").text(token_raw);
+			$("#lbl_h2_raw").show();
+		}
 
-		var token_pretty_id = token_raw_id
-		token_pretty_id = parseJwt(token_pretty_id);
-		console.log(token_pretty_id);
-		token_pretty_id = JSON.stringify(token_pretty_id, undefined, 2);
-		$("#lbl_token_pretty_id").text(token_pretty_id);	
-		$("#lbl_h2_pretty_id").show();
+		if (token_raw_id != '') {
+			var token_pretty_id = token_raw_id
+			token_pretty_id = parseJwt(token_pretty_id);
+			console.log(token_pretty_id);
+			token_pretty_id = JSON.stringify(token_pretty_id, undefined, 2);
+			$("#lbl_token_pretty_id").text(token_pretty_id);	
+			$("#lbl_h2_pretty_id").show();
+			$("#lbl_token_raw_id").text(token_raw_id);
+			$("#lbl_h2_raw_id").show();
+
+		}
 	}
-	$("#lbl_token_raw").text(token_raw);
-	$("#lbl_token_raw_id").text(token_raw_id);
-	$("#lbl_h2_raw").show();
-	$("#lbl_h2_raw_id").show();
 </script>
 <script>
 	$(document).ready(function() {
 		$('body').css("background-image", "url('"+ backgroundImage +"')");  
 		$('.site-header-logo').attr('src', headerLogo);
 		$('#lbl_main').text(title);
+		$('#lnk_fat_id').attr('href', oktaOrg + '/oauth2/v1/authorize?client_id='+ client_id+'&response_type=id_token&scope='+ scopes +'&redirect_uri='+ appUrl +'&state=x&nonce=y');
 		$('#getToken').attr('href', appUrl)
 		if(menu_page_1 != '') {
 			$('.menu').append('<a href="'+ menu_page_1 +'">'+ menu_name_1 +'</a> | ')
@@ -177,8 +183,3 @@
 		$('.menu').append('<a href="'+ oktaOrg +'/login/signout">logout</a>')
 	});
 </script>
-
-
-
-
-
