@@ -1,0 +1,184 @@
+<script>
+// CONFIGURATION
+	var oktaOrg				= 'https://wk-poc.oktapreview.com'; 																// Full url of Okta tenant without a '/' at the end
+	var client_id 			= '0oa5yuufqZPMdE9X60x6' 																// Client id for OIDC app in Okta tenant
+	var scopes				= 'openid profile'													// Scope that are requested
+	var title 				= 'Example application 1';											// Page title
+	var headerLogo 			= 'https://avatars0.githubusercontent.com/u/13510430?s=280&v=4';	// Logo op top right corner (min 100px height)
+	var backgroundImage 	= 'background.gif'; 												// Image on the background, none will be white
+	var menu_page_1			= 'https://wk.okta.solutions/oidc1.html'; 							// Leave empty if n/a
+	var menu_name_1			= 'app #1';															// Name of menu item
+	var menu_page_2			= 'https://wk.okta.solutions/oidc2.html'; 							// Leave empty if n/a
+	var menu_name_2			= 'app #2';															// Name of menu item
+	var menu_page_3			= 'https://wk-poc.oktapreview.com/home/wolterskluwerpoc_samlapp_1/0oa5zip2aGYAF3ULR0x6/aln5zj54zmvNRngLr0x6'; 										// Leave empty if n/a
+	var menu_name_3			= 'SAML app';															// Name of menu item
+</script>
+<html>
+	<head>
+		<title>Example application</title>
+		<link id="img_favicon" rel="icon" type="image/png" href="https://www.okta.com/sites/all/themes/Okta/images/logos/developer/Dev_Logo-02_Large.png" />
+		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+		<script type="text/javascript">
+			function getParameterByName( name ) {
+				name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+				var regexS = "[\\#?&]"+name+"=([^&#]*)";
+				var regex = new RegExp( regexS );
+				var results = regex.exec( window.location.href );
+				if( results == null )
+					return "";
+				else
+					return decodeURIComponent(results[1].replace(/\+/g, " "));
+			}		
+
+			function parseJwt(token) {
+				if (token != null) {
+					var base64Url = token.split('.')[1];
+					var base64 = base64Url.replace('-', '+').replace('_', '/');
+					return JSON.parse(window.atob(base64));
+				} else {
+					logEvent('event occured: a invalid or empty token was parsed',5);
+				}
+			};
+		</script>
+    	<style>
+    		body {
+    			margin: 0;
+    			padding: 0;
+				font-family: Arial,Helvetica,sans-serif;
+				z-index: 1;
+				background-repeat: no-repeat;
+				background-size:cover;
+    		}
+
+    		h1 {
+    			background-color: #8e8e8e;
+			    margin-bottom: 90px;
+				color: white;
+			    margin: 0;
+			    font-size: 1.5em;
+			    line-height: 110px;
+			    padding-right: 100px;
+			    padding-left: 100px;
+    		}
+
+    		img {
+				position: absolute;
+			    top: 5px;
+			    right: 45px;
+			    height: 100px;    			
+    		}
+    		h2 {
+    			display: none;
+
+    		}
+
+    		h2, p, pre {
+    			padding-left: 20px;
+    		}
+
+    		h2 {
+    			color: #1c69d4;
+    		}
+
+    		.page {
+    			background-color: #fff;
+    			padding: 0px;
+    			margin-right: 25px;
+    			margin-left: 25px;
+    			padding-bottom: 25px;
+    			opacity: 0.9;
+    		}
+
+    		.menu {
+    			padding: 10px;
+    			width: 100%;
+    			text-align: center;
+    		}
+
+    		.menu a{
+    			color: #8e8e8e;
+    			text-decoration: none;
+    		}
+
+    		.menu a:hover {
+    			color: #1c69d4;
+    		}
+    	</style>
+
+	</head>
+	<body>
+		<div class="page">
+			<img class="site-header-logo" src="">
+			<h1 id="lbl_main"></h1>
+			<div class="menu">
+				<a id="getToken" href="">get token</a> | 
+			</div>
+			<p>This a demo app to show Okta's capabilities around OAuth and OIDC.</p>
+			<h2 id="lbl_h2_raw_id">The raw id_token is: </h2>
+			<p><pre id="lbl_token_raw_id"></pre></p>
+			<h2 id="lbl_h2_pretty_id">The pretty id_token is: </h2>
+			<p><pre id="lbl_token_pretty_id"></pre></p>
+			<h2 id="lbl_h2_raw">The raw access_token is: </h2>
+			<p><pre id="lbl_token_raw"></pre></p>
+			<h2 id="lbl_h2_pretty">The pretty access_token is: </h2>
+			<p><pre id="lbl_token_pretty"></pre></p>
+			<p></p>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	var appUrl = window.location.href.split('#')[0];
+	var token_raw = getParameterByName('access_token');
+	var token_raw_id = getParameterByName('id_token');
+	var error = getParameterByName('error_description');
+	console.log(token_raw);
+	if (token_raw == '') {
+		if (error != '') {
+			alert(error);
+		} else {
+			window.location = oktaOrg + '/oauth2/v1/authorize?client_id='+ client_id+'&response_type=token id_token&scope='+ scopes +'&redirect_uri='+ appUrl +'&state=x&nonce=y'
+		}
+	} else {
+		var token_pretty = token_raw
+		token_pretty = parseJwt(token_pretty);
+		console.log('access_token')
+		console.log(token_pretty);
+		token_pretty = JSON.stringify(token_pretty, undefined, 2);
+		$("#lbl_token_pretty").text(token_pretty);	
+		$("#lbl_h2_pretty").show();
+
+		var token_pretty_id = token_raw_id
+		token_pretty_id = parseJwt(token_pretty_id);
+		console.log(token_pretty_id);
+		token_pretty_id = JSON.stringify(token_pretty_id, undefined, 2);
+		$("#lbl_token_pretty_id").text(token_pretty_id);	
+		$("#lbl_h2_pretty_id").show();
+	}
+	$("#lbl_token_raw").text(token_raw);
+	$("#lbl_token_raw_id").text(token_raw_id);
+	$("#lbl_h2_raw").show();
+	$("#lbl_h2_raw_id").show();
+</script>
+<script>
+	$(document).ready(function() {
+		$('body').css("background-image", "url('"+ backgroundImage +"')");  
+		$('.site-header-logo').attr('src', headerLogo);
+		$('#lbl_main').text(title);
+		$('#getToken').attr('href', appUrl)
+		if(menu_page_1 != '') {
+			$('.menu').append('<a href="'+ menu_page_1 +'">'+ menu_name_1 +'</a> | ')
+		}
+		if(menu_page_2 != '') {
+			$('.menu').append('<a href="'+ menu_page_2 +'">'+ menu_name_2 +'</a> | ')
+		}
+		if(menu_page_3 != '') {
+			$('.menu').append('<a href="'+ menu_page_3 +'">'+ menu_name_3 +'</a> | ')
+		}
+		$('.menu').append('<a href="'+ oktaOrg +'/login/signout">logout</a>')
+	});
+</script>
+
+
+
+
+
