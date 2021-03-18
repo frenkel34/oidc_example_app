@@ -1,6 +1,7 @@
 <script>
 // CONFIGURATION
-	var oktaOrg				= ''; 																// Full url of Okta tenant without a '/' at the end
+	var issuer				= ''; 																// Issuer URL from Okta like https://yourOktaOrg.okta.com/oauth2/default
+	var redirectURI 		= '';        														// Redirect URL for OIDC app in Okta tenant
 	var client_id 			= '' 																// Client id for OIDC app in Okta tenant
 	var scopes				= 'openid profile'													// Scope that are requested
 	var title 				= 'Example application 1';											// Page title
@@ -136,7 +137,7 @@
 		if (error != '') {
 			alert(error);
 		} else {
-			window.location = oktaOrg + '/oauth2/v1/authorize?client_id='+ client_id+'&response_type=token id_token&scope='+ scopes +'&redirect_uri='+ appUrl +'&state=x&nonce=y'
+			window.location = issuer + '/v1/authorize?client_id='+ client_id+'&response_type=token id_token&scope='+ scopes +'&redirect_uri='+ redirectURI +'&state=x&nonce=y'
 		}
 	} else {
 		if (token_raw != '') {
@@ -169,8 +170,8 @@
 		$('body').css("background-image", "url('"+ backgroundImage +"')");  
 		$('.site-header-logo').attr('src', headerLogo);
 		$('#lbl_main').text(title);
-		$('#lnk_fat_id').attr('href', oktaOrg + '/oauth2/v1/authorize?client_id='+ client_id+'&response_type=id_token&scope='+ scopes +'&redirect_uri='+ appUrl +'&state=x&nonce=y');
-		$('#getToken').attr('href', appUrl)
+		$('#lnk_fat_id').attr('href', issuer + '/v1/authorize?client_id='+ client_id+'&response_type=id_token&scope='+ scopes +'&redirect_uri='+ redirectURI +'&state=x&nonce=y');
+		$('#getToken').attr('href', redirectURI)
 		if(menu_page_1 != '') {
 			$('.menu').append('<a href="'+ menu_page_1 +'">'+ menu_name_1 +'</a> | ')
 		}
@@ -180,6 +181,6 @@
 		if(menu_page_3 != '') {
 			$('.menu').append('<a href="'+ menu_page_3 +'">'+ menu_name_3 +'</a> | ')
 		}
-		$('.menu').append('<a href="'+ oktaOrg +'/login/signout">logout</a>')
+		$('.menu').append('<a href="'+ issuer +'/v1/logout?id_token_hint='+ token_raw_id +'&post_logout_redirect_uri='+ redirectURI +'">logout</a>')
 	});
 </script>
