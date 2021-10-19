@@ -26,11 +26,11 @@
 				var regex = new RegExp( regexS );
 				var results = regex.exec( window.location.href );
 				if( results == null )
-					return "";
+				return "";
 				else
-					return decodeURIComponent(results[1].replace(/\+/g, " "));
+				return decodeURIComponent(results[1].replace(/\+/g, " "));
 			}		
-
+			
 			function parseJwt(token) {
 				if (token != null) {
 					var base64Url = token.split('.')[1];
@@ -42,70 +42,65 @@
 			};
 		</script>
     	<style>
-    		body {
-    			margin: 0;
-    			padding: 0;
+			body {
+				margin: 0;
+				padding: 0;
 				font-family: Arial,Helvetica,sans-serif;
 				z-index: 1;
 				background-repeat: no-repeat;
 				background-size:cover;
-    		}
-
-    		h1 {
-    			background-color: #8e8e8e;
-			    margin-bottom: 90px;
+			}
+			h1 {
+				background-color: #8e8e8e;
+				margin-bottom: 90px;
 				color: white;
-			    margin: 0;
-			    font-size: 1.5em;
-			    line-height: 110px;
-			    padding-right: 100px;
-			    padding-left: 100px;
-    		}
-
-    		img {
+				margin: 0;
+				font-size: 1.5em;
+				line-height: 110px;
+				padding-right: 100px;
+				padding-left: 100px;
+			}
+			.site-header-logo {
 				position: absolute;
-			    top: 5px;
-			    right: 45px;
-			    height: 100px;    			
-    		}
-    		h2 {
-    			display: none;
-
-    		}
-
-    		h2, p, pre {
-    			padding-left: 20px;
-    		}
-
-    		h2 {
-    			color: #1c69d4;
-    		}
-
-    		.page {
-    			background-color: #fff;
-    			padding: 0px;
-    			margin-right: 25px;
-    			margin-left: 25px;
-    			padding-bottom: 25px;
-    			opacity: 0.9;
-    		}
-
-    		.menu {
-    			padding: 10px;
-    			width: 100%;
-    			text-align: center;
-    		}
-
-    		.menu a{
-    			color: #8e8e8e;
-    			text-decoration: none;
-    		}
-
-    		.menu a:hover {
-    			color: #1c69d4;
-    		}
+				top: 5px;
+				right: 45px;
+				height: 100px;    			
+			}
+			h2, p, pre {
+				padding-left: 20px;
+			}
+			
+			h2 {
+				color: #1c69d4;
+			}
+			
+			.page {
+				background-color: #fff;
+				padding: 0px;
+				margin-right: 25px;
+				margin-left: 25px;
+				padding-bottom: 25px;
+				opacity: 0.9;
+			}
+			
+			.menu {
+				padding: 10px;
+				width: 100%;
+				text-align: center;
+			}
+			
+			.menu a{
+				color: #8e8e8e;
+				text-decoration: none;
+			}
+			
+			.menu a:hover {
+				color: #1c69d4;
+			}
     	</style>
-
+		
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 	</head>
 	<body>
 		<div class="page">
@@ -114,16 +109,60 @@
 			<div class="menu">
 				<a id="getToken" href="">get token</a> | 
 			</div>
-			<p>This a demo app to show Okta's capabilities around OAuth and OIDC. As Okta returns a thin id_token by default, click <a href="" id="lnk_fat_id">here</a> to see the fat id_token.</p>
-			<h2 id="lbl_h2_raw_id">The raw id_token is: </h2>
-			<p><pre id="lbl_token_raw_id"></pre></p>
-			<h2 id="lbl_h2_pretty_id">The pretty id_token is: </h2>
-			<p><pre id="lbl_token_pretty_id"></pre></p>
-			<h2 id="lbl_h2_raw">The raw access_token is: </h2>
-			<p><pre id="lbl_token_raw"></pre></p>
-			<h2 id="lbl_h2_pretty">The pretty access_token is: </h2>
-			<p><pre id="lbl_token_pretty"></pre></p>
-			<p></p>
+
+			<div class="page container">
+				<p>This a demo app to show Okta's capabilities around OAuth and OIDC. As Okta returns a thin id_token by default, click <a href="" id="lnk_fat_id">here</a> to see the fat id_token.</p>
+				<div class="accordion" id="accordionExample">
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="headingOne">
+					<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+						<h4 class="c-heading">The raw id_token is:</h4>
+					</button>
+					</h2>
+					<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+					<div class="accordion-body">
+						<p><pre id="lbl_token_raw_id"></pre></p>
+					</div>
+					</div>
+				</div>
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="headingTwo">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+						<h4 class="c-heading">The pretty id_token is:</h4>
+					</button>
+					</h2>
+					<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+					<div class="accordion-body">
+						<p><pre id="lbl_token_pretty_id"></pre></p>
+					</div>
+					</div>
+				</div>
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="headingThree">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+						<h4 class="c-heading">The raw access_token is:</h4>
+					</button>
+					</h2>
+					<div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+					<div class="accordion-body">
+						<p><pre id="lbl_token_raw"></pre></p>
+					</div>
+					</div>
+				</div>
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="headingFour">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+						<h4 class="c-heading">The pretty access_token is:</h4>
+					</button>
+					</h2>
+					<div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+					<div class="accordion-body">
+						<p><pre id="lbl_token_pretty"></pre></p>
+					</div>
+					</div>
+				</div>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>
