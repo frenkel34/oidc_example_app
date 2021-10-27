@@ -136,7 +136,7 @@
 		if (error != '') {
 			alert(error);
 		} else {
-			window.location = oktaOrg + '/oauth2/v1/authorize?client_id='+ client_id+'&response_type=token id_token&scope='+ scopes +'&redirect_uri='+ appUrl +'&state=x&nonce=y'
+			window.location = IdpUrl + '/oauth2/v1/authorize?client_id='+ client_id+'&response_type=token id_token&scope='+ scopes +'&redirect_uri='+ appUrl +'&state=x&nonce=y'
 		}
 	} else {
 		if (token_raw != '') {
@@ -169,7 +169,7 @@
 		$('body').css("background-image", "url('"+ backgroundImage +"')");  
 		$('.site-header-logo').attr('src', headerLogo);
 		$('#lbl_main').text(title);
-		$('#lnk_fat_id').attr('href', oktaOrg + '/oauth2/v1/authorize?client_id='+ client_id+'&response_type=id_token&scope='+ scopes +'&redirect_uri='+ appUrl +'&state=x&nonce=y');
+		$('#lnk_fat_id').attr('href', IdpUrl + '/oauth2/v1/authorize?client_id='+ client_id+'&response_type=id_token&scope='+ scopes +'&redirect_uri='+ appUrl +'&state=x&nonce=y');
 		$('#getToken').attr('href', appUrl)
 		if(menu_page_1 != '') {
 			$('.menu').append('<a href="'+ menu_page_1 +'">'+ menu_name_1 +'</a> | ')
@@ -180,6 +180,6 @@
 		if(menu_page_3 != '') {
 			$('.menu').append('<a href="'+ menu_page_3 +'">'+ menu_name_3 +'</a> | ')
 		}
-		$('.menu').append('<a href="'+ oktaOrg +'/login/signout">logout</a>')
+		$('.menu').append('<a href="'+ IdpUrl +'/login/signout">logout</a>')
 	});
 </script>
